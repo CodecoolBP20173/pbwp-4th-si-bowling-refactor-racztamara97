@@ -8,14 +8,7 @@ def score(game):
         else:
             result += get_value(game[i])
         if frame < 10  and get_value(game[i]) == 10:
-            if game[i] == '/':
-                result += get_value(game[i+1])
-            elif game[i] == 'X' or game[i] == 'x':
-                result += get_value(game[i+1])  # ha x-et gurított, akkor hozzáadom az eredményhez a kövi gurítást
-                if game[i+2] == '/':    # ha x után a 2. gurításommal tarolok, akkor +10pont jár (-amit legutóbb adtam hozzá)
-                    result += 10 - get_value(game[i+1])
-                else:
-                    result += get_value(game[i+2])  # ha nem tarolok, akkor hozzáadom a második gurítást is
+            result = check_spare_or_strike(game, result, i)
         last = get_value(game[i])   # last = utolsó gurítás
         if not in_first_half:   # ha a körön belül nem az 1. gurításnál tartunk, akkor a körök sorszámát növeljük eggyel
             frame += 1
@@ -26,6 +19,18 @@ def score(game):
         if game[i] == 'X' or game[i] == 'x':    # ha x-et gurítok, akkor nem lesz 2. gurításom, így a körök számát növelem eggyel
             in_first_half = True
             frame += 1
+    return result
+
+
+def check_spare_or_strike(game, result, i):
+    if game[i] == '/':
+        result += get_value(game[i+1])
+    elif game[i] == 'X' or game[i] == 'x':
+        result += get_value(game[i+1])  # ha x-et gurított, akkor hozzáadom az eredményhez a kövi gurítást
+        if game[i+2] == '/':    # ha x után a 2. gurításommal tarolok, akkor +10pont jár (-amit legutóbb adtam hozzá)
+            result += 10 - get_value(game[i+1])
+        else:
+            result += get_value(game[i+2])  # ha nem tarolok, akkor hozzáadom a második gurítást is
     return result
 
 
